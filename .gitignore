@@ -1,0 +1,6 @@
+.pio
+.clang_complete
+.ccls
+.vscode/
+*.temp
+*.jpg
