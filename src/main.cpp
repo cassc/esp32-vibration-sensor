@@ -5,12 +5,16 @@
 // Lower value increase sensitivity
 #define DEBOUNCE_TIME_MS 1
 #define GPIO_VIBR 35
-#define GPIO_VIBR2 34
+// Uncomnet to use additional vibration sensor input
+// #define GPIO_VIBR2 23
+
+
 
 // Comment to disable MQTT message
-#define ENABLE_MQTT
+// #define ENABLE_MQTT
 
-#define GPIO_LED 27
+// Comment to disable LED feedback
+// #define GPIO_LED 27
 
 boolean btnState = false;
 
@@ -31,7 +35,9 @@ void maybeReportBackByGPIO(uint8_t pin)
   // send message if state changed
   if (state != btnState)
   {
+#ifdef GPIO_LED    
     digitalWrite(GPIO_LED, state);
+#endif
 
     prevMQSentTs = now;
     btnState = state;
@@ -68,9 +74,13 @@ void setup()
 #endif
 
   pinMode(GPIO_VIBR, INPUT_PULLDOWN);
+#ifdef GPIO_VIBR2  
   pinMode(GPIO_VIBR2, INPUT_PULLDOWN);
+#endif
 
+#ifdef GPIO_LED
   pinMode(GPIO_LED, OUTPUT);
+#endif  
 
   onMsg += mac + ":1";
   offMsg += mac + ":0";
@@ -81,5 +91,7 @@ void loop()
   portalLoop();
 
   maybeReportBackByGPIO(GPIO_VIBR);
+#ifdef GPIO_VIBR2  
   maybeReportBackByGPIO(GPIO_VIBR2);
+#endif
 }
